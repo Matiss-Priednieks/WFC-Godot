@@ -1,0 +1,9 @@
+C:\Users\Matiss\Documents\Wave Function Collapse\.mono\temp\bin\Debug\Wave Function Collapse.dll
+C:\Users\Matiss\Documents\Wave Function Collapse\.mono\temp\bin\Debug\Wave Function Collapse.pdb
+C:\Users\Matiss\Documents\Wave Function Collapse\.mono\temp\obj\Debug\Wave Function Collapse.csproj.AssemblyReference.cache
+C:\Users\Matiss\Documents\Wave Function Collapse\.mono\temp\obj\Debug\Wave Function Collapse.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Matiss\Documents\Wave Function Collapse\.mono\temp\obj\Debug\Wave Function Collapse.AssemblyInfoInputs.cache
+C:\Users\Matiss\Documents\Wave Function Collapse\.mono\temp\obj\Debug\Wave Function Collapse.AssemblyInfo.cs
+C:\Users\Matiss\Documents\Wave Function Collapse\.mono\temp\obj\Debug\Wave Function Collapse.csproj.CoreCompileInputs.cache
+C:\Users\Matiss\Documents\Wave Function Collapse\.mono\temp\obj\Debug\Wave Function Collapse.dll
+C:\Users\Matiss\Documents\Wave Function Collapse\.mono\temp\obj\Debug\Wave Function Collapse.pdb
