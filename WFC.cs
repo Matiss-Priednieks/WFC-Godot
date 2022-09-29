@@ -21,7 +21,6 @@ public class WFC : Node2D
             GD.Print(Grid[i].Collapsed);
         }
     }
-
 }
 
 
@@ -35,5 +34,4 @@ public class Cell : Object
         Collapsed = collapsed;
         Options = options;
     }
-
 }
