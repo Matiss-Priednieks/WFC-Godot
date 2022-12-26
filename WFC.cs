@@ -1,13 +1,17 @@
 using Godot;
+using System.Collections.Generic;
 
-public class WFC : Node2D
+public class WFC : TileMap
 {
     // Vector2[] Directions = new Vector2[] { Vector2.Up, Vector2.Down, Vector2.Left, Vector2.Right };
-    // NodePath[] CellPath;
-    int Dim = 2;
+    int Dim = 16;
     Cell[] Grid;
+    bool Initialised = false;
+    RandomNumberGenerator rng = new RandomNumberGenerator();
 
-    int[] DefaultList = { 0, 1, 2 };
+    List<int> DefaultList = new List<int>() { 0, 1, 2 };
+    [Export] Vector2 StartPos = Vector2.Zero;
+    int CurrentTile = 0;
 
     public override void _Ready()
     {
@@ -18,18 +22,52 @@ public class WFC : Node2D
         {
             Grid[i] = new Cell(false, DefaultList);
 
-            GD.Print(Grid[i].Collapsed);
+            // GD.Print(Grid[i].Collapsed);
+        }
+
+    }
+    public override void _Process(float delta)
+    {
+        if (!Initialised)
+        {
+            Initalise();
+        }
+    }
+    public void Initalise()
+    {
+        for (int i = 0; i < Dim; i++)
+        {
+            var randomTile = rng.RandiRange(0, Grid[i].Options.Count);
+            if (Grid[i].Options.Count != 0)
+            {
+                Grid[i].Collapsed = true;
+                CurrentTile = randomTile;
+                for (int j = 0; j < Dim; j++)
+                {
+                    randomTile = rng.RandiRange(0, Grid[j].Options.Count);
+                    if (Grid[j].Options.Count != 0)
+                    {
+                        Grid[j].Collapsed = true;
+                        SetCell(i, j, CurrentTile);
+                    }
+                    GD.Print("Before remove: " + Grid[j].Options.Count + "\n");
+                    Grid[j].Options.Remove((CurrentTile + 1) % 2);
+                    GD.Print("After remove: " + Grid[j].Options.Count + "\n");
+                }
+            }
+            Grid[i].Options.Remove((CurrentTile + 1) % 2);
+            Initialised = true;
         }
     }
 }
 
 
-public class Cell : Object
+public class Cell : Godot.Object
 {
     public bool Collapsed;
-    public int[] Options;
+    public List<int> Options;
 
-    public Cell(bool collapsed, int[] options)
+    public Cell(bool collapsed, List<int> options)
     {
         Collapsed = collapsed;
         Options = options;

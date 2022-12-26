@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "wgLWlGmQjAde+UMwjPmP1W3z4rExTz/TXH0Cdcxv1zMMXklDzjV6g1i7QGGxgW4aCWksfsdhGDOGxBE2t5DAWA==",
+  "dgSpecHash": "wNZuTTE4YBnOTMYR9Q2ZZ+ozXtrr/XmLcA7Di4KjEbaYlkR0yAWoyo1PNmH0DhMjaf/rLP+8X67+BLJ+9ryzrw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Matiss\\Documents\\Wave Function Collapse\\Wave Function Collapse.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "/home/gurki/Dodecahedrons/WFC-Godot/Wave Function Collapse.csproj",
+  "expectedPackageFiles": [
+    "/home/gurki/.nuget/packages/microsoft.netframework.referenceassemblies/1.0.2/microsoft.netframework.referenceassemblies.1.0.2.nupkg.sha512",
+    "/home/gurki/.nuget/packages/microsoft.netframework.referenceassemblies.net472/1.0.2/microsoft.netframework.referenceassemblies.net472.1.0.2.nupkg.sha512"
+  ],
   "logs": []
 }

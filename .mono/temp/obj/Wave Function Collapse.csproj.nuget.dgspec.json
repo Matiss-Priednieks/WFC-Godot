@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Matiss\\Documents\\Wave Function Collapse\\Wave Function Collapse.csproj": {}
+    "/home/gurki/Dodecahedrons/WFC-Godot/Wave Function Collapse.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Matiss\\Documents\\Wave Function Collapse\\Wave Function Collapse.csproj": {
+    "/home/gurki/Dodecahedrons/WFC-Godot/Wave Function Collapse.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Matiss\\Documents\\Wave Function Collapse\\Wave Function Collapse.csproj",
+        "projectUniqueName": "/home/gurki/Dodecahedrons/WFC-Godot/Wave Function Collapse.csproj",
         "projectName": "Wave Function Collapse",
-        "projectPath": "C:\\Users\\Matiss\\Documents\\Wave Function Collapse\\Wave Function Collapse.csproj",
-        "packagesPath": "C:\\Users\\Matiss\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Matiss\\Documents\\Wave Function Collapse\\.mono\\temp\\obj\\",
+        "projectPath": "/home/gurki/Dodecahedrons/WFC-Godot/Wave Function Collapse.csproj",
+        "packagesPath": "/home/gurki/.nuget/packages/",
+        "outputPath": "/home/gurki/Dodecahedrons/WFC-Godot/.mono/temp/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Matiss\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/home/gurki/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net472"
@@ -37,7 +37,15 @@
       "frameworks": {
         "net472": {
           "targetAlias": "net472",
-          "runtimeIdentifierGraphPath": "C:\\Program Files (x86)\\dotnet\\sdk\\6.0.202\\RuntimeIdentifierGraph.json"
+          "dependencies": {
+            "Microsoft.NETFramework.ReferenceAssemblies": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.2, )",
+              "autoReferenced": true
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/dotnet6-6.0.109/sdk/6.0.109/RuntimeIdentifierGraph.json"
         }
       }
     }
