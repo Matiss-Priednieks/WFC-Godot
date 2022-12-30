@@ -1,7 +1,7 @@
 using Godot;
 using System.Collections.Generic;
 
-public class WFC : TileMap
+public class WFCEntropyOnly : TileMap
 {
     // Vector2[] Directions = new Vector2[] { Vector2.Up, Vector2.Down, Vector2.Left, Vector2.Right };
     int Dim = 16;
@@ -44,35 +44,42 @@ public class WFC : TileMap
     {
         for (int i = 0; i < Dim; i++)
         {
-            if (Grid[i].Options.Count != 0)
+            if (Grid[i].Options.Count != 0 || !Grid[i].Collapsed)
             {
-                Grid[i].Collapsed = true;
+                rng.Randomize();
+                var randomCellOption = rng.RandiRange(0, Grid[i].Options.Count);
                 for (int j = 0; j < Dim; j++)
                 {
-                    Vector2 currPos = new Vector2(i, j);
-                    Vector2 randDirection = Directions[rng.RandiRange(0, Directions.Length - 1)];
-                    Vector2 nextCell = currPos + randDirection;
-                    if (GetCell((int)nextCell.x, (int)nextCell.y) != 3)
+                    if (Grid[j].Options.Count != 0 || !Grid[j].Collapsed)
                     {
-                        int smallest = 7;
-                        //grabs list of entropy values relative to current cell.
-                        int[] entropy = CheckEntropy(currPos);
-                        for (int x = 0; x < entropy.Length; x++)
+                        randomCellOption = rng.RandiRange(0, Grid[j].Options.Count);
+                        Vector2 currPos = new Vector2(i, j);
+                        Vector2 randDirection = Directions[rng.RandiRange(0, Directions.Length - 1)];
+                        Vector2 nextCell = currPos + randDirection;
+                        if (GetCell((int)nextCell.x, (int)nextCell.y) != 3)
                         {
-
-                            if (entropy[x] < smallest)
+                            int smallest = 7;
+                            //grabs list of entropy values relative to current cell.
+                            int[] entropy = CheckEntropy(currPos);
+                            for (int x = 0; x < entropy.Length; x++)
                             {
-                                smallest = entropy[x];
+
+                                if (entropy[x] < smallest)
+                                {
+                                    smallest = entropy[x];
+                                }
                             }
+                            GD.Print("X Position: " + nextCell.x + "\n " + "Y Position: " + nextCell.y + "\n" + "Cell Entropy: " + GetCell(Mathf.Abs((int)nextCell.x), Mathf.Abs((int)nextCell.y)) + "\n");
+                            SetCell(Mathf.Abs((int)currPos.x), Mathf.Abs((int)currPos.y), randomCellOption);
+                            GD.Print(rng.RandiRange(0, Grid[i].Options.Count));
                         }
-                        // GD.Print("X Position: " + nextCell.x + "\n " + "Y Position: " + nextCell.y + "\n" + "Cell Entropy: " + GetCell(Mathf.Abs((int)nextCell.x), Mathf.Abs((int)nextCell.y)) + "\n");
 
-                        //almost working. Sets next cell to a random option from the grids potential options. I think I need to just remove that option from the next grid item for this to work?
-                        SetCell(Mathf.Abs((int)nextCell.x), Mathf.Abs((int)nextCell.y), rng.RandiRange(0, Grid[i].Options.Count));
-                        //GD.Print(rng.RandiRange(0, Grid[i].Options.Count));
                     }
-
+                    Grid[j].Collapsed = true;
+                    Grid[j].Options.Remove(randomCellOption);
                 }
+                Grid[i].Collapsed = true;
+                Grid[i].Options.Remove(randomCellOption);
             }
             Initialised = true;
         }
@@ -99,14 +106,14 @@ public class WFC : TileMap
 }
 
 
-public class Cell : Godot.Object
-{
-    public bool Collapsed;
-    public List<int> Options;
+// public class Cell : Godot.Object
+// {
+//     public bool Collapsed;
+//     public List<int> Options;
 
-    public Cell(bool collapsed, List<int> options)
-    {
-        Collapsed = collapsed;
-        Options = options;
-    }
-}
+//     public Cell(bool collapsed, List<int> options)
+//     {
+//         Collapsed = collapsed;
+//         Options = options;
+//     }
+// }
