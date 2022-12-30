@@ -92,14 +92,24 @@ public class WFCEntropyOnly : TileMap
         Vector2 leftEntropy = position - new Vector2(-1, 0);
         Vector2 rightEntropy = position - new Vector2(1, 0);
 
+        Vector2 topLeftEntropy = position - new Vector2(-1, -1);
+        Vector2 topRightEntropy = position - new Vector2(1, -1);
+        Vector2 bottomLeftEntropy = position - new Vector2(-1, 1);
+        Vector2 bottomRightEntropy = position - new Vector2(1, 1);
+
         //empty int array
-        int[] cellEntropy = { 0, 0, 0, 0 };
+        int[] cellEntropy = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
         //adds entropy value (index in this case) to the int array and returns it
         cellEntropy[0] = GetCell((int)upEntropy.x, (int)upEntropy.y);
         cellEntropy[1] = GetCell((int)downEntropy.x, (int)downEntropy.y);
         cellEntropy[2] = GetCell((int)leftEntropy.x, (int)leftEntropy.y);
         cellEntropy[3] = GetCell((int)rightEntropy.x, (int)rightEntropy.y);
+
+        cellEntropy[4] = GetCell((int)topLeftEntropy.x, (int)topLeftEntropy.y);
+        cellEntropy[5] = GetCell((int)topRightEntropy.x, (int)topRightEntropy.y);
+        cellEntropy[6] = GetCell((int)bottomLeftEntropy.x, (int)bottomLeftEntropy.y);
+        cellEntropy[7] = GetCell((int)bottomRightEntropy.x, (int)bottomRightEntropy.y);
         return cellEntropy;
 
     }
