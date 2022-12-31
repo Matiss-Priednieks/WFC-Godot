@@ -40,7 +40,7 @@ public class WFCEntropyOnly : TileMap
             Initalise();
         }
     }
-    public void Initalise()
+    public async void Initalise()
     {
         for (int i = 0; i < Dim; i++)
         {
@@ -50,9 +50,9 @@ public class WFCEntropyOnly : TileMap
                 var randomCellOption = rng.RandiRange(0, Grid[i].Options.Count);
                 for (int j = 0; j < Dim; j++)
                 {
-                    if (Grid[j].Options.Count != 0 || !Grid[j].Collapsed)
+                    if (Grid[i].Options.Count != 0 || !Grid[i].Collapsed)
                     {
-                        randomCellOption = rng.RandiRange(0, Grid[j].Options.Count);
+                        randomCellOption = rng.RandiRange(0, Grid[i].Options.Count);
                         Vector2 currPos = new Vector2(i, j);
                         Vector2 randDirection = Directions[rng.RandiRange(0, Directions.Length - 1)];
                         Vector2 nextCell = currPos + randDirection;
@@ -66,12 +66,19 @@ public class WFCEntropyOnly : TileMap
                                 if (entropy[x] < smallest) smallest = entropy[x];
                             }
                             // GD.Print("X Position: " + nextCell.x + "\n " + "Y Position: " + nextCell.y + "\n" + "Cell Entropy: " + GetCell(Mathf.Abs((int)nextCell.x), Mathf.Abs((int)nextCell.y)) + "\n");
+                            await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
                             SetCell(Mathf.Abs((int)currPos.x), Mathf.Abs((int)currPos.y), randomCellOption);
-                            // GD.Print(rng.RandiRange(0, Grid[i].Options.Count));
+                        }
+                        else if (Grid[i].Options.Count <= 1)
+                        {
+                            foreach (var item in Grid[i].Options)
+                            {
+                                GD.Print(item);
+                            }
                         }
 
-                        Grid[j].Collapsed = true;
-                        Grid[j].Options.Remove(randomCellOption);
+                        // Grid[j].Collapsed = true;
+                        // Grid[j].Options.Remove(randomCellOption);
                     }
                 }
                 Grid[i].Collapsed = true;
