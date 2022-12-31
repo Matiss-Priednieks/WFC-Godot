@@ -60,23 +60,20 @@ public class WFCEntropyOnly : TileMap
                         Vector2 nextCell = currPos + randDirection;
                         if (GetCell((int)nextCell.x, (int)nextCell.y) != MaxEntropy) //issue is here. I'm grabbing the cell index, which obviously changes based off of what image cell is being used. This needs to change to be relatvie to the cell array rather than the tileset.
                         {
-                            int smallest = MaxEntropy;
-                            //grabs list of entropy values relative to current cell.
-                            int[] entropy = CheckEntropy(currPos);
-                            for (int x = 0; x < entropy.Length; x++)
-                            {
-                                if (entropy[x] < smallest) smallest = entropy[x];
-                            }
+                            // int smallest = MaxEntropy;
+                            // //grabs list of entropy values relative to current cell.
+                            // int[] entropy = CheckEntropy(currPos);
+                            // for (int x = 0; x < entropy.Length; x++)
+                            // {
+                            //     if (entropy[x] < smallest) smallest = entropy[x]; //TODO: This isn't being used anywhere lmao
+                            // }
                             // GD.Print("X Position: " + nextCell.x + "\n " + "Y Position: " + nextCell.y + "\n" + "Cell Entropy: " + GetCell(Mathf.Abs((int)nextCell.x), Mathf.Abs((int)nextCell.y)) + "\n");
                             await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
                             SetCell(Mathf.Abs((int)currPos.x), Mathf.Abs((int)currPos.y), randomCellOption);
                         }
                         else if (Grid[i].Options.Count <= 1)
                         {
-                            foreach (var item in Grid[i].Options)
-                            {
-                                GD.Print(item);
-                            }
+                            Grid[i].Collapsed = true;
                         }
                     }
                 }
