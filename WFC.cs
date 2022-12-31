@@ -12,11 +12,13 @@ public class WFC : TileMap
     Vector2[] Directions = { Vector2.Up, Vector2.Down, Vector2.Left, Vector2.Right };
 
     List<int> DefaultList = new List<int>() { 0, 1, 2 };
+    int MaxEntropy;
     [Export] Vector2 StartPos = Vector2.Zero;
     int CurrentTile = 0;
 
     public override void _Ready()
     {
+        MaxEntropy = DefaultList.Count;
         rng.Randomize();
         Grid = new Cell[Dim * Dim];
 
@@ -26,21 +28,21 @@ public class WFC : TileMap
             Grid[i] = new Cell(false, DefaultList);
             for (int j = 0; j < Dim * Dim; j++)
             {
-                SetCell(i, j, 3);
+                SetCell(i, j, Grid[i].Options.Count);
             }
 
-            // GD.Print(Grid[i].Collapsed);
         }
+
 
     }
     public override void _Process(float delta)
     {
         if (!Initialised)
         {
-            Initalise();
+            Generate();
         }
     }
-    public async void Initalise()
+    public async void Generate()
     {
         for (int i = 0; i < Dim; i++)
         {
@@ -56,9 +58,9 @@ public class WFC : TileMap
                         Vector2 currPos = new Vector2(i, j);
                         Vector2 randDirection = Directions[rng.RandiRange(0, Directions.Length - 1)];
                         Vector2 nextCell = currPos + randDirection;
-                        if (GetCell((int)nextCell.x, (int)nextCell.y) != DefaultList.Count)
+                        if (GetCell((int)nextCell.x, (int)nextCell.y) != MaxEntropy) //issue is here. I'm grabbing the cell index, which obviously changes based off of what image cell is being used. This needs to change to be relatvie to the cell array rather than the tileset.
                         {
-                            int smallest = DefaultList.Count;
+                            int smallest = MaxEntropy;
                             //grabs list of entropy values relative to current cell.
                             int[] entropy = CheckEntropy(currPos);
                             for (int x = 0; x < entropy.Length; x++)
@@ -69,19 +71,20 @@ public class WFC : TileMap
                             await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
                             SetCell(Mathf.Abs((int)currPos.x), Mathf.Abs((int)currPos.y), randomCellOption);
                         }
-
-                        foreach (var item in Grid[i].Options)
+                        else if (Grid[i].Options.Count <= 1)
                         {
-                            GD.Print(item);
+                            foreach (var item in Grid[i].Options)
+                            {
+                                GD.Print(item);
+                            }
                         }
-
-
-                        // Grid[j].Collapsed = true;
-                        // Grid[j].Options.Remove(randomCellOption);
                     }
                 }
-                Grid[i].Collapsed = true;
                 Grid[i].Options.Remove(randomCellOption);
+            }
+            else if (Grid[i].Options.Count == 0)
+            {
+                Grid[i].Collapsed = true;
             }
             Initialised = true;
         }
