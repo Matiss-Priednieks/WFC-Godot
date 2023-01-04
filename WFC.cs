@@ -15,6 +15,7 @@ public class WFC : TileMap
     int MaxEntropy;
     [Export] Vector2 StartPos = Vector2.Zero;
     int CurrentTile = 0;
+    bool Started = false;
 
     public override void _Ready()
     {
@@ -25,14 +26,12 @@ public class WFC : TileMap
 
         for (int i = 0; i < Dim * Dim; i++)
         {
-            Grid[i] = new Cell(false, DefaultList);
             for (int j = 0; j < Dim * Dim; j++)
             {
-                SetCell(i, j, Grid[i].Options.Count);
+                Grid[i] = new Cell(false, DefaultList);
+                // SetCell(i, j, Grid[i].Options.Count - 1);
             }
-
         }
-
 
     }
     public override void _Process(float delta)
@@ -50,45 +49,69 @@ public class WFC : TileMap
             {
                 rng.Randomize();
                 var randomCellOption = rng.RandiRange(0, Grid[i].Options.Count);
+                int opposite = 0;
                 for (int j = 0; j < Dim; j++)
                 {
-                    if (Grid[i].Options.Count != 0 || !Grid[i].Collapsed)
+                    if (Grid[i].Options.Count != 0 && !Grid[i].Collapsed)
                     {
+                        rng.Randomize();
                         randomCellOption = rng.RandiRange(0, Grid[i].Options.Count);
+                        switch (randomCellOption)
+                        {
+                            case 0: opposite = 2; break;
+                            case 1: opposite = 0; break;
+                            case 2: opposite = 1; break;
+                            default: break;
+                        }
+
                         Vector2 currPos = new Vector2(i, j);
                         Vector2 randDirection = Directions[rng.RandiRange(0, Directions.Length - 1)];
                         Vector2 nextCell = currPos + randDirection;
-                        if (GetCell((int)nextCell.x, (int)nextCell.y) != MaxEntropy) //issue is here. I'm grabbing the cell index, which obviously changes based off of what image cell is being used. This needs to change to be relatvie to the cell array rather than the tileset.
+                        if (Grid[i].Options.Count != MaxEntropy)
                         {
-                            // int smallest = MaxEntropy;
-                            // //grabs list of entropy values relative to current cell.
-                            // int[] entropy = CheckEntropy(currPos);
-                            // for (int x = 0; x < entropy.Length; x++)
-                            // {
-                            //     if (entropy[x] < smallest) smallest = entropy[x];
-                            // }
-                            // GD.Print("X Position: " + nextCell.x + "\n " + "Y Position: " + nextCell.y + "\n" + "Cell Entropy: " + GetCell(Mathf.Abs((int)nextCell.x), Mathf.Abs((int)nextCell.y)) + "\n");
-                            await ToSignal(GetTree().CreateTimer(0.1f), "timeout");
-                            SetCell(Mathf.Abs((int)currPos.x), Mathf.Abs((int)currPos.y), randomCellOption);
+                            int smallest = MaxEntropy;
+                            //grabs list of entropy values relative to current cell.
+                            Vector2 whereNext = CheckEntropy(currPos);
+
+                            await ToSignal(GetTree().CreateTimer(0.01f), "timeout");
+                            SetCell(Mathf.Abs((int)(currPos.x + whereNext.x)), Mathf.Abs((int)(currPos.y + whereNext.y)), randomCellOption);
+                            Grid[i + 1].Options.Remove(opposite);
+                            GD.Print(Grid[i + 1].Options.Count);
+                        }
+                        else if (Grid[i].Options.Count == MaxEntropy && !Started)
+                        {
+                            await ToSignal(GetTree().CreateTimer(0.01f), "timeout");
+                            SetCell(Mathf.Abs((int)(currPos.x)), Mathf.Abs((int)(currPos.y)), randomCellOption);
+                            Grid[i + 1].Options.Remove(opposite);
+                            Started = true;
                         }
                         else if (Grid[i].Options.Count <= 1)
                         {
-                            // Grid[i].Collapsed = true;
+                            Grid[i].Collapsed = true;
+                        }
+                        else
+                        {
+                            // GD.Print("Max Entropy");
                         }
                     }
+                    else if (Grid[i].Options.Count == 0 && !Grid[i].Collapsed)
+                    {
+                        // GD.Print(Grid[i].Options.Count);
+                    }
+                    else
+                    {
+                        // GD.Print(randomCellOption);
+                        Grid[i].Collapsed = true;
+                    }
+
                 }
-                Grid[i].Options.Remove(randomCellOption);
-            }
-            else if (Grid[i].Options.Count == 0)
-            {
-                Grid[i].Collapsed = true;
             }
             Initialised = true;
         }
     }
 
     //Issue with checking for entropy: Cell is only able to find out about behind itself and in front of it, because it's using a 1D array. It doesn't see side to side. Need to refactor Cell gen code up in _Ready to try work around this.
-    public int[] CheckEntropy(Vector2 position)
+    public Vector2 CheckEntropy(Vector2 position)
     {
         //grabs relative position of each cell
         Vector2 upEntropy = position + new Vector2(0, -1);
@@ -106,8 +129,20 @@ public class WFC : TileMap
         cellPositions[2] = GetCell((int)leftEntropy.x, (int)leftEntropy.y);
         cellPositions[3] = GetCell((int)rightEntropy.x, (int)rightEntropy.y);
 
-        // var nextCellEntropy = Grid[(int)downEntropy.y].Options.Count; //Idea for later
-        return cellPositions;
+        int smallest = 0;
+        for (int x = 0; x < cellPositions.Length; x++)
+        {
+            if (cellPositions[x] < smallest) smallest = cellPositions[x];
+        }
+
+        switch (smallest)
+        {
+            case 0: return upEntropy;
+            case 1: return downEntropy;
+            case 2: return leftEntropy;
+            case 3: return rightEntropy;
+            default: return Vector2.Zero;
+        }
 
     }
 }

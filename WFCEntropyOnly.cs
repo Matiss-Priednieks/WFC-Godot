@@ -23,10 +23,10 @@ public class WFCEntropyOnly : TileMap
         Grid = new Cell[Dim * Dim];
 
 
-        for (int i = 0; i < Dim * Dim; i++)
+        for (int i = 0; i < Dim; i++)
         {
             Grid[i] = new Cell(false, DefaultList);
-            for (int j = 0; j < Dim * Dim; j++)
+            for (int j = 0; j < Dim; j++)
             {
                 SetCell(i, j, Grid[i].Options.Count);
             }
